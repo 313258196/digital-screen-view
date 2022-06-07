@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+		<meta name="keywords" content="" />
+		<meta name="description" content="图鸟科技-提供一站式开发服务，从原型设计、UI设计、前端编程、到程序开发、运营维护，让我们的工作能够顺利进行" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<title>你的2021年幸运签</title>
+		<link rel="alternate icon" type="image/png" href="favicon.png">
+		<!-- 此源码的话，可关注图鸟工作室，进行获取。仅仅是做来玩的，喜欢就拿去玩吧，但希望保留一下我的微信。
+		（用jq22元素周期表改来玩的，增加了自动切换，字体抽取等效果，原地址：http://www.jq22.com/yanshi4710） -->
+		<!-- 作者微信:vv7064  时间:2019\12\10 -->
+		<style>
+			html, body {
+				height: 100%;
+			}
+
+			body {
+				/*background-color: #000000;*/
+				background-image: url(img/33.png);
+				background-position: center;
+				background-attachment: fixed;
+				background-repeat: no-repeat;
+				background-size: cover;
+				margin: 0;
+				font-family: Helvetica, sans-serif;;
+				overflow: hidden;
+			}
+
+			a {
+				color: #ffffff;
+			}
+/*标题*/
+			#info {
+				position: absolute;
+				width: 100%;
+				color: #ffffff;
+				padding: 5px;
+				font-family: Monospace;
+				font-size: 60px;
+				font-size: 6vw;
+				font-weight: bold;
+				text-align: center;
+				z-index: 1;
+			}
+
+			#menu {
+				position: absolute;
+				bottom: 20px;
+				width: 100%;
+				text-align: center;
+			}
+			/*框大小*/
+			.element {
+				width: 120px;/* 120 160 */
+				height: 100px;
+				box-shadow: 0px 0px 12px rgba(0,255,255,0.5);
+				border: 1px solid rgba(127,255,255,0.25);
+				text-align: center;
+				cursor: default;
+			}
+
+			.element:hover {
+				box-shadow: 0px 0px 12px rgba(0,255,255,0.75);
+				border: 1px solid rgba(127,255,255,0.75);
+			}
+				/*.element img{
+					width:100px;
+					height:100px;
+				}*/
+
+				.element .number {
+					position: absolute;
+					top: 2px;
+					right: 20px;
+					font-size: 12px;
+					color: rgba(127,255,255,0.75);
+				}
+				/*字大小*/
+				.element .symbol {
+					position: absolute;
+					top: 5px;
+					left: 0px;
+					right: 0px;
+					font-size: 36px;
+					font-weight: bold;
+					color: rgba(255,255,255,0.75);
+					text-shadow: 0 0 10px rgba(0,255,255,0.95);
+				}
+
+				.element .details {
+					position: absolute;
+					bottom: 15px;
+					left: 0px;
+					right: 0px;
+					font-size: 12px;
+					color: rgba(127,255,255,0.75);
+				}
+		/*按钮字*/	
+			button {
+				color: rgba(255,255,255,1);
+				background: transparent;
+				outline: 1px solid rgba(127,255,255,0.95);
+				border: 0px;
+				padding: 5px 10px;
+				cursor: pointer;
+			}
+			button:hover {
+				background-color: rgba(34,141,255,0.5);
+			}
+			button:active {
+				color: #000000;
+				background-color: rgba(34,141,255,0.75);
+			}
+			.name2{
+				line-height:80px;
+				text-align:center;
+				font-size:5vmin;
+				color:#fff;
+				}
+			.name3{
+				/* line-height:80px; */
+				text-align:center;
+				font-size:3vmin;
+				/* color:rgba(34,141,255,0.75); */
+				/* -webkit-animation: neon 1.5s ease-in-out infinite alternate;
+				-moz-animation: neon 1.5s ease-in-out infinite alternate;
+				animation: neon 1.5s ease-in-out infinite alternate; */
+				}
+			.long-shadow {
+				border: none;
+			    -o-text-overflow: clip;
+			    text-overflow: clip;
+			    -webkit-box-sizing: content-box;
+			    -moz-box-sizing: content-box;
+			    box-sizing: content-box;
+			    /*text-shadow: 
+			    2px 2px 5px #FFFFFF,
+			     4px 4px 5px #248eff, 
+			     6px 6px 5px #248eff, 
+			     8px 8px 5px #248eff, 
+			     10px 10px 5px #248eff; */
+			    transform-origin : 100% 0 0
+rotateY(45deg);
+			     
+				}
+			 .animateTitle1 {
+			    font-size: 50vmin;
+			    letter-spacing: 2.7vh;
+			    color: #FFF;
+				}
+			.animateTitle1 :hover{
+				
+				}
+			.nbnb{
+				-webkit-animation: neon 1.5s ease-in-out infinite alternate;
+				-moz-animation: neon 1.5s ease-in-out infinite alternate;
+				animation: neon 1.5s ease-in-out infinite alternate;
+				}
+			@-webkit-keyframes neon {
+			  from {
+			    text-shadow: 0 0 10px #fff,
+			               0 0 20px  #fff,
+			               0 0 30px  #fff,
+			               0 0 40px  #228DFF,
+			               0 0 70px  #228DFF,
+			               0 0 80px  #228DFF,
+			               0 0 100px #228DFF,
+			  }
+			  to {
+			    text-shadow: 0 0 5px #fff,
+			               0 0 10px #fff,
+			               0 0 15px #fff,
+			               0 0 20px #228DFF,
+			               0 0 35px #228DFF,
+			               0 0 40px #228DFF,
+			               0 0 50px #228DFF,
+			               0 0 75px #228DFF;
+			  }
+			}
+			.dodu {
+				-webkit-animation: flying 3s infinite;
+				-moz-animation: flying 3s infinite;
+				-o-animation: flying 3s infinite;
+				animation: flying 3s infinite;
+			}
+			
+			@keyframes flying {
+				0% {
+					margin-top: 0px;
+				}
+				50% {
+					margin-top: 6px;
+				}
+				100% {
+					margin-top: 0px;
+				}
+			}
+			
+			@-webkit-keyframes flying {
+				0% {
+					margin-top: 0px;
+				}
+				50% {
+					margin-top: 6px;
+				}
+				100% {
+					margin-top: 0px;
+				}
+			}
+			
+			@-moz-keyframes flying {
+				0% {
+					margin-top: 0px;
+				}
+				50% {
+					margin-top: 6px;
+				}
+				100% {
+					margin-top: 0px;
+				}
+			}
+			
+			@-o-keyframes flying {
+				0% {
+					margin-top: 0px;
+				}
+				50% {
+					margin-top: 6px;
+				}
+				100% {
+					margin-top: 0px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<!--<script src="https://threejs.org/build/three.js"></script>-->
+		<script src="js/three.js"></script>
+		<script src="js/tween.min.js"></script>
+		<script src="js/TrackballControls.js"></script>
+		<script src="js/CSS3DRenderer.js"></script>
+
+		<div id="container"></div>
+		<!-- <div id="info" class="nbnb">2021年幸运签</div> -->
+		<div id="menu">
+
+			<div>
+				<!--<h1 class="long-shadow"><span class="animateTitle1">ANIMA TEXT</span></h1>-->
+				<div class="long-shadow">
+					<div class="top">
+
+					</div>
+					<div class="list animateTitle1">
+
+					</div>
+
+				</div>
+				<div class="name2">
+					<span class="name"></span><br />
+					<!-- <span class="phone"></span><br /> -->
+          <button class="name3" id="btntxt" onclick="start()">请找签</button>
+				</div>
+
+
+			</div>
+
+			<button id="table">爱心</button>
+			<button id="sphere">球体</button>
+			<button id="helix">螺旋</button>
+			<button id="grid">网格</button>
+		</div>
+
+		<!--<script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>-->
+		<script type="text/javascript" src="js2/jquery.min.js"></script>
+		<script type="text/javascript" src="js2/cj.js"></script>
+		<script type="text/javascript" src="js/3Dcj.js"></script>
+
+
+	</body>
+</html>
