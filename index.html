@@ -1,0 +1,227 @@
+﻿<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>index</title>
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="js/Bubble.js"></script>
+  <!-- <meta http-equiv="refresh" content="50;url='https://blog.csdn.net/qq_31766533/article/details/119274641'"> -->
+  <link rel="stylesheet" href="css/comon0.css">
+</head>
+<script>
+  $(window).load(function () {
+    $(".loading").fadeOut()
+  })
+
+  /****/
+  $(document).ready(function () {
+    var whei = $(window).width()
+    $("html").css({ fontSize: whei / 20 })
+    $(window).resize(function () {
+      var whei = $(window).width()
+      $("html").css({ fontSize: whei / 20 })
+    });
+  });
+</script>
+<script type="text/javascript" src="js/echarts.min.js"></script>
+<script language="JavaScript" src="js/js.js"></script>
+
+<body>
+  <div class="canvas" style="opacity: .2">
+    <iframe frameborder="0" src="js/index.html" style="width: 100%; height: 100%"></iframe>
+  </div>
+  <div class="loading">
+    <div class="loadbox"> <img src="picture/loading.gif"> 页面加载中... </div>
+  </div>
+  <div class="head">
+    <h1><a href="https://gitee.com/iGaoWei/big-data-view" style="color: white">信州区数字人大</a></h1>
+    <div class="weather"><img src="picture/weather.png"><span>多云转小雨</span><span id="showTime"></span></div>
+
+    <script>
+      var t = null;
+      t = setTimeout(time, 1000);//開始运行
+      function time() {
+        clearTimeout(t);//清除定时器
+        dt = new Date();
+        var y = dt.getFullYear();
+        var mt = dt.getMonth() + 1;
+        var day = dt.getDate();
+        var h = dt.getHours();//获取时
+        var m = dt.getMinutes();//获取分
+        var s = dt.getSeconds();//获取秒
+        document.getElementById("showTime").innerHTML = y + "年" + mt + "月" + day + "-" + h + "时" + m + "分" + s + "秒";
+        t = setTimeout(time, 1000); //设定定时器，循环运行     
+      }
+
+    </script>
+
+
+  </div>
+  <div class="mainbox">
+    <ul class="clearfix">
+      <li>
+        <div class="boxall" style="height: 3.2rem">
+          <div class="alltitle">镇街人大代表排名</div>
+          <!-- <div class="allnav" id="echart1"></div> -->
+          <div class="allnav" id="echart11">
+            <div id="chart1-left">
+
+            </div>
+            <div id="chart1-right">
+              <div class="tagcloud tagcl">
+                <!-- bo大小 co颜色 -->
+                <a class="b01 co01" href="https://gitee.com/iGaoWei/big-data-view">教育</a>
+                <a class="b02 co02" href="https://gitee.com/iGaoWei/big-data-view">水利</a>
+                <a class="b03 co05" href="https://gitee.com/iGaoWei/big-data-view">卫生</a>
+                <a class="b04 co02" href="https://gitee.com/iGaoWei/big-data-view">教育</a>
+                <a class="b03 co05" href="https://gitee.com/iGaoWei/big-data-view">行政</a>
+                <a class="b03 co05" href="https://gitee.com/iGaoWei/big-data-view">交通</a>
+              </div>
+              <script type="text/javascript">
+                /*3D标签云*/
+                tagcloud({
+                  selector: ".tagcloud",  //元素选择器
+                  fontsize: 6,       //基本字体大小, 单位px
+                  radius: 40,         //滚动半径, 单位px 页面宽度和高度的五分之一
+                  mspeed: "slow",   //滚动最大速度, 取值: slow, normal(默认), fast
+                  ispeed: "slow",   //滚动初速度, 取值: slow, normal(默认), fast
+                  direction: 0,     //初始滚动方向, 取值角度(顺时针360): 0对应top, 90对应left, 135对应right-bottom(默认)...
+                  keep: false          //鼠标移出组件后是否继续随鼠标滚动, 取值: false, true(默认) 对应 减速至初速度滚动, 随鼠标滚动
+                });
+              </script>
+            </div>
+          </div>
+          <div class="boxfoot"></div>
+        </div>
+        <div class="boxall" style="height: 3.2rem">
+          <div class="alltitle">人大代表排布</div>
+          <div class="allnav" id="echart2">
+            <div id="chart2-left">
+
+            </div>
+            <div id="chart2-right">
+              <div class="tagcloud2 tagcl">
+                <!-- bo大小 co颜色 -->
+                <a class="b01 co01" href="https://gitee.com/iGaoWei/big-data-view">华侨</a>
+                <a class="b02 co02" href="https://gitee.com/iGaoWei/big-data-view">科技</a>
+                <a class="b03 co05" href="https://gitee.com/iGaoWei/big-data-view">物价</a>
+                <a class="b04 co02" href="https://gitee.com/iGaoWei/big-data-view">工商</a>
+                <a class="b03 co05" href="https://gitee.com/iGaoWei/big-data-view">特殊群体</a>
+                <a class="b03 co05" href="https://gitee.com/iGaoWei/big-data-view">税务</a>
+                <a class="b03 co05" href="https://gitee.com/iGaoWei/big-data-view">疫情</a>
+              </div>
+              <script type="text/javascript">
+                /*3D标签云*/
+                tagcloud({
+                  selector: ".tagcloud2",  //元素选择器
+                  fontsize: 6,       //基本字体大小, 单位px
+                  radius: 40,         //滚动半径, 单位px 页面宽度和高度的五分之一
+                  mspeed: "slow",   //滚动最大速度, 取值: slow, normal(默认), fast
+                  ispeed: "slow",   //滚动初速度, 取值: slow, normal(默认), fast
+                  direction: 0,     //初始滚动方向, 取值角度(顺时针360): 0对应top, 90对应left, 135对应right-bottom(默认)...
+                  keep: false          //鼠标移出组件后是否继续随鼠标滚动, 取值: false, true(默认) 对应 减速至初速度滚动, 随鼠标滚动
+                });
+              </script>
+            </div>
+          </div>
+          <div class="boxfoot"></div>
+        </div>
+        <div class="boxall" style="height: 3.2rem">
+          <!-- <div style="height:100%; width: 100%;">
+            <div class="sy" id="fb1"></div>
+            <div class="sy" id="fb2"></div>
+            <div class="sy" id="fb3"></div>
+          </div> -->
+          <div class="" id="">
+            <div style="float: left; width: 50%; height: 210px" id="fb01"></div>
+            <div style="float: left; width: 50%; height: 210px" id="fb02"></div>
+            <div style="clear:both;"></div>
+          </div>
+          <div class="leidanav leidanav2">
+            <ul class="clearfix">
+              <li><span>总人数</span>
+                <p>128</p>
+              </li>
+              <li><span>男人大代表</span>
+                <p>100</p>
+              </li>
+              <li><span>女人大代表</span>
+                <p>28</p>
+              </li>
+
+            </ul>
+          </div>
+
+          <div class="boxfoot">
+
+          </div>
+        </div>
+      </li>
+      <li>
+        <div class="bar">
+          <!-- <div class="barbox">
+            <ul class="clearfix">
+              <li class="pulll_left counter">12581189</li>
+              <li class="pulll_left counter">3912410</li>
+            </ul>
+          </div>
+          <div class="barbox2">
+            <ul class="clearfix">
+              <li class="pulll_left">2018年总收入情况 </li>
+              <li class="pulll_left">2018年总支出情况</li>
+            </ul>
+          </div> -->
+          <div class="bar-left">
+            <div class="title">总提意见数</div>
+            <div class="numm">1321321</div>
+          </div>
+          <div class="bar-right">
+            <div class="itemi">
+              <div class="title-sub">区级人大代表数</div>
+              <div id="item1" class="itemii"></div>
+            </div>
+            <div class="itemi">
+              <div class="title-sub">任命人数</div>
+              <div id="item2" class="itemii"></div>
+            </div>
+            <div class="itemi">
+              <div class="title-sub">免职人数</div>
+              <div id="item3" class="itemii"></div>
+            </div>
+          </div>
+        </div>
+        <div class="map">
+          <!-- <div class="map1"><img src="picture/lbx.png"></div>
+          <div class="map2"><img src="picture/jt.png"></div>
+          <div class="map3"><img src="picture/map.png"></div> -->
+          <div class="map4" id="map_1"></div>
+        </div>
+      </li>
+      <li>
+        <div class="boxall" style="height:3.4rem">
+          <div class="alltitle">提案通过率</div>
+          <div class="allnav" id="echart4"></div>
+          <div class="boxfoot"></div>
+        </div>
+        <div class="boxall" style="height: 3.2rem">
+          <div class="alltitle">乡镇人大代表数</div>
+          <div class="allnav" id="echart5"></div>
+          <div class="boxfoot"></div>
+        </div>
+        <div class="boxall" style="height: 3rem">
+          <div class="alltitle">人大工作</div>
+          <div class="allnav" id="echart6"></div>
+          <div class="boxfoot"></div>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="back"></div>
+
+
+  <script type="text/javascript" src="js/china.js"></script>
+  <script type="text/javascript" src="js/area_echarts.js"></script>
+</body>
+
+</html>
