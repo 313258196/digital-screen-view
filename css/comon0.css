@@ -124,7 +124,10 @@ a:hover {
 }
 
 /* zoe */
-.allnav #chart1-left {
+.allnav #chart1-left,
+.allnav #chart2-left,
+.allnav #chart4-left,
+.allnav #chart5-left {
 	width: 100%;
 	height: calc(150%);
 	position: relative;
@@ -132,26 +135,18 @@ a:hover {
 	right: 30px;
 }
 
-.allnav #chart1-right {
-	width: 50%;
-	height: calc(100% - 30px);
-}
-.allnav #chart2-left {
-	width: 100%;
-	height: calc(150%);
-	position: relative;
-	top: -60px;
-	right: 30px;
-}
-
-.allnav #chart2-right {
-	width: 50%;
-	height: calc(100% - 30px);
+.allnav #chart1-right,
+.allnav #chart2-right,
+.allnav #chart4-right,
+.allnav #chart5-right {
+	width: 70%;
+	/* height: calc(100% - 30px); */
+	height: 100%;
 }
 
 .tagcl {
 	width: 100%;
-	height: 90% !important;
+	height: 100% !important;
 	overflow: hidden;
 	position: relative;
 
@@ -171,7 +166,6 @@ a:hover {
 
 }
 
-
 .b01{
     width: 50px;
     height: 50px;
@@ -190,6 +184,11 @@ a:hover {
     height: 70px;
 
 }
+.b05{
+    width: 90px;
+    height: 90px;
+
+}
 .co01{  border: 2px solid rgba(5,118,254,1);   box-shadow: inset 0 0 20px rgba(5,118,254,1);}
 .co02{border: 2px solid rgba(238,255,65,1);   box-shadow: inset 0 0 20px rgba(238,255,65,1);}
 .co03{border: 2px solid rgba(26,121,181,1);   box-shadow: inset 0 0 20px rgba(26,121,181,1);}
@@ -197,6 +196,10 @@ a:hover {
 .co05{border: 2px solid rgba(255,138,0,1);   box-shadow: inset 0 0 20px rgba(255,138,0,1);}
 
 .leidanav{margin-top: -5px;}
+.leidanav2{
+	position: relative;
+	top: -20px;
+}
 .leidanav li{float: left; width: 20%; text-align: center; border-left: 1px solid rgba(255,255,255,.1)}
 .leidanav2 li{ width: 33.3333%}
 .leidanav3 li{ width: 25%}
@@ -290,8 +293,6 @@ a:hover {
 	padding: .1rem .1rem 0rem .1rem;
 }
 
-.mainbox>ul {}
-
 .mainbox>ul>li {
 	float: left;
 	padding: 0 .1rem
@@ -365,11 +366,8 @@ a:hover {
 .bar {
 	background: rgba(101, 132, 226, .1);
 	padding: .15rem;
-
-	/* new */
 	display: flex;
 	flex-wrap: wrap;
-	/* new */
 }
 
 .bar .bar-left{
@@ -392,7 +390,6 @@ a:hover {
 	flex-wrap: wrap;
 }
 .bar .bar-right .itemi{
-	/* flex: 1; */
 	width: 33.3333%;
 	text-align: center;
 }
@@ -465,13 +462,13 @@ a:hover {
 
 .map {
 	position: relative;
-	height: 7.2rem;
 	z-index: 9;
+	top: -30px;
 }
 
 .map4 {
 	width: 200%;
-	height: 7rem;
+	height: 5rem;
 	position: relative;
 	left: -50%;
 	top: 4%;
@@ -515,9 +512,12 @@ a:hover {
 #map_1{
 	position: relative;
 	top: -20px;
-	/* width: 300px;
-	height: 300px; */
 	height: 800px;
+}
+#map{
+	position: relative;
+	top: 30px;
+	height: 476px;
 }
 /* new */
 
