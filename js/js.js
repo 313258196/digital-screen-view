@@ -59,8 +59,6 @@ $(function () {
             // 平台求职能力图
             dataPlatformJob = await get("getuserRadar")
             dataPlatformJobVal = dataPlatformJob.map(item => item.value)
-            console.log(22222233333, dataPlatformJob,dataPlatformJobVal)
-
         } catch (err) {
             console.log("request failed...", err)
         } finally {
@@ -73,10 +71,10 @@ $(function () {
             echarts_5left();
             echarts3();
             echarts_312();
-            // echarts_3124();
             echarts_item123();
 
-            map();
+            // echarts_3124();
+            // map();
         }
     }
     initData()
@@ -181,7 +179,7 @@ $(function () {
     function echarts3() {
         var myChart1 = echarts.init(document.getElementById('charts3'));
 
-        option = {
+        let option = {
             tooltip: {
                 trigger: 'axis'
             },
@@ -373,7 +371,7 @@ $(function () {
         document.getElementById("gender-male").innerText = dataGender.male
         document.getElementById("gender-female").innerText = dataGender.female
 
-        option = {
+        let option = {
             tooltip: {
                 trigger: 'item',
                 formatter: "{a} <br/>{b}: {c} ({d}%)",
@@ -405,7 +403,7 @@ $(function () {
                 }
             ]
         };
-        option2 = {
+        let option2 = {
             tooltip: {
                 trigger: 'item',
                 formatter: "{a} <br/>{b}: {c} ({d}%)",
@@ -450,7 +448,7 @@ $(function () {
     function echarts_4left() {
         var myChart = echarts.init(document.getElementById('chart4-left'));
 
-        option = {
+        let option = {
             dataset: {
                 source: dataJobWantedHot
             },
@@ -539,7 +537,7 @@ $(function () {
     }
     function echarts_2right() {
         var myChart = echarts.init(document.getElementById('chart2-right'));
-        option = {
+        let option = {
             legend: {
                 top: 'bottom',
                 textStyle: {
@@ -576,7 +574,7 @@ $(function () {
     }
     function echarts_1right() {
         var myChart = echarts.init(document.getElementById('chart1-right'));
-        option = {
+        let option = {
             legend: {
                 top: 'bottom',
                 textStyle: {
@@ -615,7 +613,7 @@ $(function () {
 
     function echarts_1left() {
         var myChart = echarts.init(document.getElementById('chart1-left'));
-        option = {
+        let option = {
             dataset: {
                 source: [
                     ['amount', 'product'],
@@ -696,7 +694,7 @@ $(function () {
     function echarts_5left() {
         var myChart = echarts.init(document.getElementById('chart5-left'));
 
-        option = {
+        let option = {
             dataset: {
                 source: dataJobHot
             },
@@ -785,7 +783,7 @@ $(function () {
     }
     function echarts_2left() {
         var myChart = echarts.init(document.getElementById('chart2-left'));
-        option = {
+        let option = {
             // dataset: {
             //     source: dataJobSalary
             // },
@@ -873,7 +871,7 @@ $(function () {
 
         document.getElementById("echart1-oul").innerHTML = dataPlatformJob.map(item => `<li><span>${item.name}</span><p>${item.value}</p></li>`)
 
-        option = {
+        let option = {
             color: ['#9DD060', '#35C96E', '#4DCEF8'],
             tooltip: {},
             radar: {

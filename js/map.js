@@ -396,7 +396,6 @@ function map() {
     geoCoordMap = dataMap.geoCoordMap
 
 
-    console.log(22222222, data, geoCoordMap)
     var convertData = function (data) {
         var res = [];
         for (var i = 0; i < data.length; i++) {
