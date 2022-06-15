@@ -45,10 +45,26 @@ $(function () {
             let json = {}
             rsData.forEach(item => json[item.name] = [item.longitude, item.latitude])
             dataMap.geoCoordMap = json
-            console.log(111, dataMap)
+
+            // 前五省份
+            dataProvinces = await get("getuserCountByProvince")
+
+            // 行业薪资岗位 柱状图
+            dataJobSalary = await get("getWorkByWage")
+            // dataJobSalary = dataJobSalary.map(item => ({ name: item.name, value: item.valueA, valueStr: item.values })).reverse()
+            dataJobSalary = dataJobSalary.map(item => [item.valueA, item.name, item.values]).reverse()
+
+            dataWorkIndustry = await get("getWorkIndustryByWage")
+
+            // 平台求职能力图
+            dataPlatformJob = await get("getuserRadar")
+            dataPlatformJobVal = dataPlatformJob.map(item => item.value)
+            console.log(22222233333, dataPlatformJob,dataPlatformJobVal)
+
         } catch (err) {
             console.log("request failed...", err)
         } finally {
+            echarts_1();
             echarts_1right();
             echarts_2right();
             echarts_1left();
@@ -57,7 +73,7 @@ $(function () {
             echarts_5left();
             echarts3();
             echarts_312();
-            echarts_3124();
+            // echarts_3124();
             echarts_item123();
 
             map();
@@ -269,6 +285,7 @@ $(function () {
         var myChart1 = echarts.init(document.getElementById('item1'));
         var myChart2 = echarts.init(document.getElementById('item2'));
         var myChart3 = echarts.init(document.getElementById('item3'));
+        var myChart4 = echarts.init(document.getElementById('item4'));
 
         let option = {
             tooltip: {
@@ -318,13 +335,15 @@ $(function () {
         let option1 = deepCopy(option)
         let option2 = deepCopy(option)
         let option3 = deepCopy(option)
+        let option4 = deepCopy(option)
 
         const calc = (count) => (Math.floor(count / dataTotal.total * 100) + "%")
 
         let opts = new Map([
             [option1, { value: dataTotal.job, name: calc(dataTotal.job), itemStyle: { color: "#FFFF00" } }],
             [option2, { value: dataTotal.company, name: calc(dataTotal.company), itemStyle: { color: "#FF6600" } }],
-            [option3, { value: dataTotal.work, name: calc(dataTotal.work), itemStyle: { color: "#0099FF" } }]
+            [option3, { value: dataTotal.work, name: calc(dataTotal.work), itemStyle: { color: "#0099FF" } }],
+            [option4, { value: dataTotal.personNumber, name: calc(dataTotal.personNumber), itemStyle: { color: "#99FF00" } }]
         ]);
 
         opts.forEach((val, key) => key.series[0].data = [
@@ -336,11 +355,13 @@ $(function () {
         myChart1.setOption(option1);
         myChart2.setOption(option2);
         myChart3.setOption(option3);
+        myChart4.setOption(option4);
 
         window.addEventListener("resize", function () {
             myChart1.resize();
             myChart2.resize();
             myChart3.resize();
+            myChart4.resize();
         });
     }
     function echarts_312() {
@@ -363,7 +384,7 @@ $(function () {
             legend: {
                 orient: 'vertical',
                 top: '25%',
-                right: "8%",
+                right: "6%",
                 itemWidth: 10,
                 itemHeight: 10,
                 textStyle: {
@@ -375,7 +396,7 @@ $(function () {
                 {
                     name: '年龄分布',
                     type: 'pie',
-                    center: ['35%', '50%'],
+                    center: ['30%', '50%'],
                     radius: ['40%', '50%'],
                     color: ['#62c98d', '#2f89cf', '#4cb9cf', '#e0c828', '#e58c00', '#eb295b'],
                     label: { show: false },
@@ -394,7 +415,7 @@ $(function () {
             },
             legend: {
                 orient: 'vertical',
-                top: '10%',
+                top: '6%',
                 right: '0%',
                 itemWidth: 10,
                 itemHeight: 10,
@@ -407,7 +428,7 @@ $(function () {
                 {
                     name: '学历构成',
                     type: 'pie',
-                    center: ['40%', '50%'],
+                    center: ['30%', '50%'],
                     radius: ['40%', '50%'],
                     color: ['#62c98d', '#2f89cf', '#4cb9cf', '#e0c828', '#e58c00', '#eb295b'],
                     label: { show: false },
@@ -428,18 +449,6 @@ $(function () {
     }
     function echarts_4left() {
         var myChart = echarts.init(document.getElementById('chart4-left'));
-
-        // 泡泡
-        document.getElementsByClassName("tagcloud4")[0].innerHTML = getProp(dataJobWantedHot)
-        tagcloud({
-            selector: ".tagcloud4",  //元素选择器
-            fontsize: 6,       //基本字体大小, 单位px
-            radius: 40,         //滚动半径, 单位px 页面宽度和高度的五分之一
-            mspeed: "slow",   //滚动最大速度, 取值: slow, normal(默认), fast
-            ispeed: "slow",   //滚动初速度, 取值: slow, normal(默认), fast
-            direction: 0,     //初始滚动方向, 取值角度(顺时针360): 0对应top, 90对应left, 135对应right-bottom(默认)...
-            keep: false          //鼠标移出组件后是否继续随鼠标滚动, 取值: false, true(默认) 对应 减速至初速度滚动, 随鼠标滚动
-        });
 
         option = {
             dataset: {
@@ -515,6 +524,18 @@ $(function () {
             myChart.resize();
         });
 
+        // 泡泡
+        document.getElementsByClassName("tagcloud4")[0].innerHTML = getProp(dataJobWantedHot.splice(0, 6))
+        tagcloud({
+            selector: ".tagcloud4",  //元素选择器
+            fontsize: 6,       //基本字体大小, 单位px
+            radius: 40,         //滚动半径, 单位px 页面宽度和高度的五分之一
+            mspeed: "slow",   //滚动最大速度, 取值: slow, normal(默认), fast
+            ispeed: "slow",   //滚动初速度, 取值: slow, normal(默认), fast
+            direction: 0,     //初始滚动方向, 取值角度(顺时针360): 0对应top, 90对应left, 135对应right-bottom(默认)...
+            keep: false          //鼠标移出组件后是否继续随鼠标滚动, 取值: false, true(默认) 对应 减速至初速度滚动, 随鼠标滚动
+        });
+
     }
     function echarts_2right() {
         var myChart = echarts.init(document.getElementById('chart2-right'));
@@ -536,18 +557,12 @@ $(function () {
                     name: 'Nightingale Chart',
                     type: 'pie',
                     radius: ["20%", "50%"],
-                    center: ['50%', '50%'],
+                    center: ['45%', '35%'],
                     roseType: 'area',
                     itemStyle: {
                         borderRadius: 8
                     },
-                    data: [
-                        { value: 40, name: '20%' },
-                        { value: 38, name: '10%' },
-                        { value: 32, name: '15%' },
-                        { value: 30, name: '20%' },
-                        { value: 28, name: '25%' },
-                    ]
+                    data: dataWorkIndustry
                 }
             ]
         }
@@ -576,21 +591,16 @@ $(function () {
             },
             series: [
                 {
+                    // bottom:"50%",
                     name: 'Nightingale Chart',
                     type: 'pie',
                     radius: ["20%", "50%"],
-                    center: ['50%', '50%'],
+                    center: ['45%', '35%'],
                     roseType: 'area',
                     itemStyle: {
                         borderRadius: 8
                     },
-                    data: [
-                        { value: 40, name: '20%' },
-                        { value: 38, name: '10%' },
-                        { value: 32, name: '15%' },
-                        { value: 30, name: '20%' },
-                        { value: 28, name: '25%' },
-                    ]
+                    data: dataProvinces
                 }
             ]
         }
@@ -620,7 +630,12 @@ $(function () {
                     [201, '秦峰乡']
                 ]
             },
-            grid: { containLabel: true },
+            grid: {
+                containLabel: true,
+                left: "0%",
+                // right: "30px",
+                // bottom: "20%"
+            },
             xAxis: {
                 // name: 'amount',
                 axisLabel: {
@@ -643,6 +658,8 @@ $(function () {
             yAxis: {
                 type: 'category',
                 axisLabel: {
+                    interval: 0,
+                    rotate: 20,
                     show: true,
                     textStyle: {
                         color: '#fff',  //更改坐标轴文字颜色
@@ -678,18 +695,6 @@ $(function () {
     }
     function echarts_5left() {
         var myChart = echarts.init(document.getElementById('chart5-left'));
-
-        // 泡泡
-        document.getElementsByClassName("tagcloud5")[0].innerHTML = getProp(dataJobHot)/*3D标签云*/
-        tagcloud({
-            selector: ".tagcloud5",  //元素选择器
-            fontsize: 6,       //基本字体大小, 单位px
-            radius: 40,         //滚动半径, 单位px 页面宽度和高度的五分之一
-            mspeed: "slow",   //滚动最大速度, 取值: slow, normal(默认), fast
-            ispeed: "slow",   //滚动初速度, 取值: slow, normal(默认), fast
-            direction: 0,     //初始滚动方向, 取值角度(顺时针360): 0对应top, 90对应left, 135对应right-bottom(默认)...
-            keep: false          //鼠标移出组件后是否继续随鼠标滚动, 取值: false, true(默认) 对应 减速至初速度滚动, 随鼠标滚动
-        });
 
         option = {
             dataset: {
@@ -765,24 +770,31 @@ $(function () {
             myChart.resize();
         });
 
+        // 泡泡
+        document.getElementsByClassName("tagcloud5")[0].innerHTML = getProp(dataJobHot.splice(0, 6))
+        tagcloud({
+            selector: ".tagcloud5",  //元素选择器
+            fontsize: 6,       //基本字体大小, 单位px
+            radius: 40,         //滚动半径, 单位px 页面宽度和高度的五分之一
+            mspeed: "slow",   //滚动最大速度, 取值: slow, normal(默认), fast
+            ispeed: "slow",   //滚动初速度, 取值: slow, normal(默认), fast
+            direction: 0,     //初始滚动方向, 取值角度(顺时针360): 0对应top, 90对应left, 135对应right-bottom(默认)...
+            keep: false          //鼠标移出组件后是否继续随鼠标滚动, 取值: false, true(默认) 对应 减速至初速度滚动, 随鼠标滚动
+        });
+
     }
     function echarts_2left() {
         var myChart = echarts.init(document.getElementById('chart2-left'));
         option = {
-            dataset: {
-                source: [
-                    ['score', 'amount', 'product'],
-                    [89.3, 58, '监察和司法'],
-                    [57.1, 78, '财政经济'],
-                    [74.4, 41, '教育科学文化卫生'],
-                    [50.1, 127, '农业和农村'],
-                    [89.7, 201, '环境与资源保护'],
-                    [68.1, 79, '社会建设'],
-                    [19.6, 91, '外事华侨民族宗教'],
-                    [10.6, 101, '预算'],
-                ]
+            // dataset: {
+            //     source: dataJobSalary
+            // },
+            grid: {
+                containLabel: true,
+                left: "0%",
+                // right: "30px",
+                // bottom: "20%"
             },
-            grid: { containLabel: true },
             xAxis: {
                 // name: 'amount',
                 axisLabel: {
@@ -804,20 +816,25 @@ $(function () {
             yAxis: {
                 type: 'category',
                 axisLabel: {
+                    interval: 0,
+                    rotate: 20,
                     show: true,
                     textStyle: {
                         color: '#fff',  //更改坐标轴文字颜色
                         //    fontSize : 14      //更改坐标轴文字大小
-                    }
+                    },
+                    // margin:0
                 },
             },
             series: [
                 {
+                    data: dataJobSalary,
                     type: 'bar',
                     encode: {
                         x: 'amount',
                         y: 'product'
                     },
+                    left: 0,
                     itemStyle: {
                         normal: {
                             color: '#2f89cf'
@@ -825,7 +842,13 @@ $(function () {
                     },
                     label: {
                         show: true,
-                        position: "right"
+                        // position: "inner",
+                        // color:"#fff",
+                        position: "right",
+                        formatter: params => {
+                            // return params.data.valueStr || ""
+                            return params.data[2] || ""
+                        }
                     }
                 }
             ]
@@ -839,95 +862,63 @@ $(function () {
 
     }
     function echarts_1() {
-        // 基于准备好的dom，初始化echarts实例
         var myChart = echarts.init(document.getElementById('echart1'));
+        var styl = {
+            areaStyle: {
+                normal: {
+                    opacity: 0.3,
+                }
+            }
+        }
+
+        document.getElementById("echart1-oul").innerHTML = dataPlatformJob.map(item => `<li><span>${item.name}</span><p>${item.value}</p></li>`)
 
         option = {
-            //  backgroundColor: '#00265f',
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'shadow'
-                }
-            },
-            grid: {
-                left: '0%',
-                top: '10px',
-                right: '0%',
-                bottom: '4%',
-                containLabel: true
-            },
-            xAxis: [{
-                type: 'category',
-                data: ['商超门店', '教育培训', '房地产', '生活服务', '汽车销售', '旅游酒店', '五金建材'],
-                axisLine: {
-                    show: true,
-                    lineStyle: {
-                        color: "rgba(255,255,255,.1)",
-                        width: 1,
-                        type: "solid"
-                    },
-                },
-
-                axisTick: {
-                    show: false,
-                },
-                axisLabel: {
-                    interval: 0,
-                    // rotate:50,
-                    show: true,
-                    splitNumber: 15,
+            color: ['#9DD060', '#35C96E', '#4DCEF8'],
+            tooltip: {},
+            radar: {
+                center: ['50%', '50%'],
+                radius: ["25%", "70%"],
+                name: {
                     textStyle: {
-                        color: "rgba(255,255,255,.6)",
-                        fontSize: '12',
-                    },
-                },
-            }],
-            yAxis: [{
-                type: 'value',
-                axisLabel: {
-                    //formatter: '{value} %'
-                    show: true,
-                    textStyle: {
-                        color: "rgba(255,255,255,.6)",
-                        fontSize: '12',
-                    },
-                },
-                axisTick: {
-                    show: false,
-                },
-                axisLine: {
-                    show: false,
-                    lineStyle: {
-                        color: "rgba(255,255,255,.1	)",
-                        width: 1,
-                        type: "solid"
-                    },
+                        color: '#72ACD1'
+                    }
                 },
                 splitLine: {
+
                     lineStyle: {
-                        color: "rgba(255,255,255,.1)",
-                    }
-                }
-            }],
-            series: [
-                {
-                    type: 'bar',
-                    data: [200, 300, 300, 900, 1500, 1200, 600],
-                    barWidth: '35%', //柱子宽度
-                    // barGap: 1, //柱子之间间距
-                    itemStyle: {
-                        normal: {
-                            color: '#2f89cf',
-                            opacity: 1,
-                            barBorderRadius: 5,
-                        }
-                    }
-                }
 
-            ]
+                        color: 'rgba(255,255,255,.0',
+
+                        width: 2
+
+                    }
+
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: 'rgba(255,255,255,0.2)',
+                        width: 1,
+                        type: 'dotted'
+
+                    },
+
+                },
+                splitArea: {
+                    areaStyle: {
+                        color: ['rgba(255,255,255,.1)', 'rgba(255,255,255,0)']
+                    }
+                },
+                indicator: dataPlatformJob
+            },
+            series: [{
+                name: '',
+                type: 'radar',
+                data: [
+                    { ...styl, value: dataPlatformJobVal, name: "平台求职能力" }
+                ]
+            }]
         };
-
         // 使用刚指定的配置项和数据显示图表。
         myChart.setOption(option);
         window.addEventListener("resize", function () {

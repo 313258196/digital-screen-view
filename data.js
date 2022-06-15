@@ -3,7 +3,8 @@ let dataTotal = {
     total: 100,
     job: 40,
     company: 50,
-    work: 60
+    work: 60,
+    personNumber: 62
 }
 
 // 人员区域分布
@@ -17,6 +18,59 @@ let dataArea = [
     [91, '沙溪镇'],
     [10, '朝阳镇'],
     [201, '秦峰乡']
+]
+
+// 前五省份
+let dataProvinces = [
+    { value: 40, name: '20%' },
+    { value: 38, name: '10%' },
+    { value: 32, name: '15%' },
+    { value: 30, name: '20%' },
+    { value: 28, name: '25%' },
+]
+
+// 行业薪资岗位 柱状图
+let dataJobSalary =
+    // [
+    //     { "name": "移动web前端", "value": 580, "valueA": 7, "values": "30000及以上", "check": false, "total": 0, "male": 0, "female": 0 }, 
+    //     { "name": "web前端", "value": 78, "valueA": 10, "values": "30000及以上", "check": false, "total": 0, "male": 0, "female": 0 }, 
+    //     { "name": "Java", "value": 41, "valueA": 7, "values": "12000-15000", "check": false, "total": 0, "male": 0, "female": 0 }, 
+    //     { "name": "其他产品职位", "value": 127, "valueA": 7, "values": "12000-15000", "check": false, "total": 0, "male": 0, "female": 0 }, 
+    //     { "name": "C++", "value": 201, "valueA": 6, "values": "9000-12000", "check": false, "total": 0, "male": 0, "female": 0 }, 
+    //     { "name": "Android", "value": 79, "valueA": 5, "values": "7000-9000", "check": false, "total": 0, "male": 0, "female": 0 }, 
+    //     { "name": "产品经理", "value": 79, "valueA": 4, "values": "5000-7000", "check": false, "total": 0, "male": 0, "female": 0 }, 
+    //     { "name": "游戏制作人", "value": 91, "valueA": 4, "values": "5000-7000", "check": false, "total": 0, "male": 0, "female": 0 }, 
+    //     { "name": "会计", "value": 101, "valueA": 4, "values": "5000-7000", "check": false, "total": 0, "male": 0, "female": 0 }, 
+    //     { "name": "建筑工程师", "value": 101, "valueA": 4, "values": "5000-7000", "check": false, "total": 0, "male": 0, "female": 0 }
+    // ]
+    [
+        [7, '监察和司法', 231],
+        [10, '财政经济', 231],
+        [7, '教育科学文化卫生', 231],
+        [7, '农业和农村', 231],
+        [6, '环境与资源保护', 231],
+        [5, '社会建设', 231],
+        [4, '外事华侨民族宗教', 231],
+        [4, '预算', 231],
+    ]
+// [
+//     [580, '监察和司法'],
+//     [78, '财政经济'],
+//     [41, '教育科学文化卫生'],
+//     [127, '农业和农村'],
+//     [201, '环境与资源保护'],
+//     [79, '社会建设'],
+//     [91, '外事华侨民族宗教'],
+//     [101, '预算'],
+// ]
+
+// 行业薪资
+let dataWorkIndustry = [
+    { value: 40, name: '20%' },
+    { value: 38, name: '10%' },
+    { value: 32, name: '15%' },
+    { value: 30, name: '20%' },
+    { value: 28, name: '25%' },
 ]
 
 // 求职岗位热度
@@ -98,6 +152,30 @@ let dataJobWanted = [
 
 // 地图数据
 let dataMap = {
-    data:[],
-    geoCoordMap:{},
+    data: [],
+    geoCoordMap: {},
 }
+
+// 平台求职能力图
+var dataPlatformJob = [{
+    name: '学历',
+    value: 56,
+    max: 100
+}, {
+    name: '职业资格',
+    value: 56,
+    max: 100
+}, {
+    name: '职称',
+    value: 56,
+    max: 100
+}, {
+    name: '工资',
+    value: 56,
+    max: 100
+}, {
+    name: '年龄',
+    value: 56,
+    max: 100
+}]
+var dataPlatformJobVal = [43, 100, 28, 3, 150]
