@@ -179,3 +179,70 @@ var dataPlatformJob = [{
     max: 100
 }]
 var dataPlatformJobVal = [43, 100, 28, 3, 150]
+
+// 地图数据
+let dataMapProvince = [
+    {
+        name: "湖南",
+        uploadcnt: "20671",
+        uploadpzs: "",
+        xsmy: "73.8",
+        kcmy: "1579.5"
+    },
+    {
+        name: "上海",
+        uploadcnt: "22932",
+        uploadpzs: "",
+        xsmy: "163.6",
+        kcmy: "784.6"
+    },
+    {
+        name: "云南",
+        uploadcnt: "56177",
+        uploadpzs: "",
+        xsmy: "533.2",
+        kcmy: "25.2"
+    },
+    {
+        name: "湖北",
+        uploadcnt: "8613",
+        uploadpzs: "",
+        xsmy: "26.2",
+        kcmy: "454.6"
+    },
+    {
+        name: "江苏",
+        uploadcnt: "1757",
+        uploadpzs: "",
+        xsmy: "20.6",
+        kcmy: "361.8"
+    },
+    {
+        name: "内蒙古",
+        uploadcnt: "",
+        uploadpzs: "",
+        xsmy: "62.2",
+        kcmy: "154.3"
+    },
+    {
+        name: "浙江",
+        uploadcnt: "141905",
+        uploadpzs: "179",
+        xsmy: "1097.2",
+        kcmy: "1073.4"
+    },
+    {
+        name: "江西",
+        uploadcnt: "3033",
+        uploadpzs: "",
+        xsmy: "12.6",
+        kcmy: "615.9"
+    },
+    {
+        name: "四川",
+        uploadcnt: "",
+        uploadpzs: "",
+        xsmy: "",
+        kcmy: ""
+    }
+]

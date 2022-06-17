@@ -22,6 +22,11 @@ $(function () {
             // 总劳动人数
             dataTotal = await get("getMIdTopData")
 
+            // 人员区域分布
+            dataArea = await get("getuserCountByCity")
+            dataArea = dataArea.reverse()
+            console.log("dataArea...", dataArea)
+
             // 性别年龄学历
             dataGender = await get("getuserByGender")
             dataAge = await get("getUserByAge")
@@ -30,35 +35,42 @@ $(function () {
 
             // 求职热度
             dataJobWantedHot = await get("getUserByIndustry")
-            dataJobWantedHot = dataJobWantedHot.map(item => [item.value, item.name]).reverse()
+            // dataJobWantedHot = dataJobWantedHot.map(item => [item.value, item.name]).reverse()
+            dataJobWantedHot = dataJobWantedHot.reverse()
 
             // 招聘职位热度
             dataJobHot = await get("getWorkByIndustry")
-            dataJobHot = dataJobHot.map(item => [item.value, item.name]).reverse()
+            // dataJobHot = dataJobHot.map(item => [item.value, item.name]).reverse()
+            dataJobHot = dataJobHot.reverse()
 
             // 求职意愿、企业用工数走势图
             dataJobWanted = await get("getJobHuntingByWeek")
 
             // 地图数据
-            const rsData = await get("getuserCountByArea")
-            dataMap.data = rsData.map(item => ({ name: item.name, value: item.value }))
-            let json = {}
-            rsData.forEach(item => json[item.name] = [item.longitude, item.latitude])
-            dataMap.geoCoordMap = json
+            // const rsData = await get("getuserCountByArea")
+            // dataMap.data = rsData.map(item => ({ name: item.name, value: item.value }))
+            // let json = {}
+            // rsData.forEach(item => json[item.name] = [item.longitude, item.latitude])
+            // dataMap.geoCoordMap = json
 
             // 前五省份
             dataProvinces = await get("getuserCountByProvince")
 
             // 行业薪资岗位 柱状图
             dataJobSalary = await get("getWorkByWage")
-            // dataJobSalary = dataJobSalary.map(item => ({ name: item.name, value: item.valueA, valueStr: item.values })).reverse()
-            dataJobSalary = dataJobSalary.map(item => [item.valueA, item.name, item.values]).reverse()
+            dataJobSalary = dataJobSalary.reverse()
+            console.log(222, dataJobSalary)
+            // dataJobSalary = dataJobSalary.map(item => [item.valueA, item.name, item.values]).reverse()
 
             dataWorkIndustry = await get("getWorkIndustryByWage")
+            dataWorkIndustry.forEach(item => item.value = item.valueA)
 
             // 平台求职能力图
             dataPlatformJob = await get("getuserRadar")
             dataPlatformJobVal = dataPlatformJob.map(item => item.value)
+
+            // 地图数据
+            dataMapProvince = await get("getuserMapByProvince")
         } catch (err) {
             console.log("request failed...", err)
         } finally {
@@ -75,6 +87,7 @@ $(function () {
 
             // echarts_3124();
             // map();
+            initMap();
         }
     }
     initData()
@@ -86,7 +99,7 @@ $(function () {
 
         // dataGender
 
-        option = {
+        let option = {
             tooltip: {
                 trigger: 'item',
                 formatter: "{a} <br/>{b}: {c} ({d}%)",
@@ -338,10 +351,10 @@ $(function () {
         const calc = (count) => (Math.floor(count / dataTotal.total * 100) + "%")
 
         let opts = new Map([
-            [option1, { value: dataTotal.job, name: calc(dataTotal.job), itemStyle: { color: "#FFFF00" } }],
-            [option2, { value: dataTotal.company, name: calc(dataTotal.company), itemStyle: { color: "#FF6600" } }],
-            [option3, { value: dataTotal.work, name: calc(dataTotal.work), itemStyle: { color: "#0099FF" } }],
-            [option4, { value: dataTotal.personNumber, name: calc(dataTotal.personNumber), itemStyle: { color: "#99FF00" } }]
+            [option1, { value: dataTotal.job, name: dataTotal.job, itemStyle: { color: "#FFFF00" } }],
+            [option2, { value: dataTotal.company, name: dataTotal.company, itemStyle: { color: "#FF6600" } }],
+            [option3, { value: dataTotal.work, name: dataTotal.work, itemStyle: { color: "#0099FF" } }],
+            [option4, { value: dataTotal.personNumber, name: dataTotal.personNumber, itemStyle: { color: "#99FF00" } }]
         ]);
 
         opts.forEach((val, key) => key.series[0].data = [
@@ -448,73 +461,146 @@ $(function () {
     function echarts_4left() {
         var myChart = echarts.init(document.getElementById('chart4-left'));
 
+        let maxValue = dataJobWantedHot.reduce((a, b) => a.value > b.value ? a : b, 0).value
+
         let option = {
-            dataset: {
-                source: dataJobWantedHot
+            grid: {
+                left: "0%",
+                containLabel: true
             },
-            grid: { containLabel: true },
-            xAxis: {
-                name: 'amount',
+            xAxis: [{
+                show: false,
+            }],
+            yAxis: [{
+                axisTick: 'none',
+                axisLine: 'none',
+                offset: '0',
                 axisLabel: {
-                    show: false,
                     textStyle: {
-                        color: '#fff',  //更改坐标轴文字颜色
-                        //    fontSize : 14      //更改坐标轴文字大小
+                        color: '#fff',
+                        fontSize: '14',
                     }
                 },
-                splitLine: {
-                    show: false
+                data: dataJobWantedHot.map(item => item.name)
+
+            }, {
+                axisTick: 'none',
+                axisLine: 'none',
+                axisLabel: {
+                    textStyle: {
+                        color: '#2f89cf',
+                        fontSize: '14',
+                    }
+                },
+                data: dataJobWantedHot.map(item => item.value)
+            }, {
+                nameGap: '50',
+                nameTextStyle: {
+                    color: 'rgba(255,255,255,.6)',
+                    fontSize: '16',
                 },
                 axisLine: {
-                    show: false
-                },
-                axisTick: {
-                    show: false
-                }
-            },
-            yAxis: {
-                type: 'category',
-                axisLabel: {
-                    show: true,
-                    textStyle: {
-                        color: '#fff',  //更改坐标轴文字颜色
-                        //    fontSize : 14      //更改坐标轴文字大小
+                    lineStyle: {
+                        color: 'rgba(0,0,0,0)'
                     }
                 },
-            },
-            // visualMap: {
-            //   orient: 'horizontal',
-            //   left: 'center',
-            //   min: 10,
-            //   max: 100,
-            //   text: ['High Score', 'Low Score'],
-            //   // Map the score column to color
-            //   dimension: 0,
-            //   inRange: {
-            //     color: ['#65B581', '#FFCE34', '#FD665F']
-            //   }
-            // },
-            series: [
-                {
-                    type: 'bar',
-                    encode: {
-                        // Map the "amount" column to X axis.
-                        x: 'amount',
-                        // Map the "product" column to Y axis
-                        y: 'product'
-                    },
-                    itemStyle: {
-                        normal: {
-                            color: '#2f89cf'
-                        }
-                    },
-                    label: {
-                        show: true,
-                        position: "right"
+                data: [],
+            }],
+            series: [{
+                name: '条',
+                type: 'bar',
+                yAxisIndex: 0,
+                data: dataJobWantedHot.map(item => item.value / maxValue * 100),
+                itemStyle: {
+                    normal: {
+                        color: '#2f89cf'
                     }
-                }
-            ]
+                },
+                z: 2
+            }, {
+                name: '白框',
+                type: 'bar',
+                yAxisIndex: 1,
+                barGap: '-100%',
+                data: [99.5, 99.5, 99.5, 99.5, 99.5, 99.5, 99.5, 99.5, 99.5, 99.5],
+                barWidth: 15,
+                itemStyle: {
+                    normal: {
+                        color: 'rgba(0,0,0,0)',
+                        barBorderRadius: 15,
+                    }
+                },
+                z: 1
+            }]
         };
+
+        // let option = {
+        //     dataset: {
+        //         source: dataJobWantedHot
+        //     },
+        //     grid: { containLabel: true, left: 0 },
+        //     xAxis: {
+        //         name: 'amount',
+        //         axisLabel: {
+        //             show: false,
+        //             textStyle: {
+        //                 color: '#fff',  //更改坐标轴文字颜色
+        //                 //    fontSize : 14      //更改坐标轴文字大小
+        //             }
+        //         },
+        //         splitLine: {
+        //             show: false
+        //         },
+        //         axisLine: {
+        //             show: false
+        //         },
+        //         axisTick: {
+        //             show: false
+        //         }
+        //     },
+        //     yAxis: {
+        //         type: 'category',
+        //         axisLabel: {
+        //             show: true,
+        //             textStyle: {
+        //                 color: '#fff',  //更改坐标轴文字颜色
+        //                 //    fontSize : 14      //更改坐标轴文字大小
+        //             }
+        //         },
+        //     },
+        //     // visualMap: {
+        //     //   orient: 'horizontal',
+        //     //   left: 'center',
+        //     //   min: 10,
+        //     //   max: 100,
+        //     //   text: ['High Score', 'Low Score'],
+        //     //   // Map the score column to color
+        //     //   dimension: 0,
+        //     //   inRange: {
+        //     //     color: ['#65B581', '#FFCE34', '#FD665F']
+        //     //   }
+        //     // },
+        //     series: [
+        //         {
+        //             type: 'bar',
+        //             encode: {
+        //                 // Map the "amount" column to X axis.
+        //                 x: 'amount',
+        //                 // Map the "product" column to Y axis
+        //                 y: 'product'
+        //             },
+        //             itemStyle: {
+        //                 normal: {
+        //                     color: '#2f89cf'
+        //                 }
+        //             },
+        //             label: {
+        //                 show: true,
+        //                 position: "right"
+        //             }
+        //         }
+        //     ]
+        // };
 
         // 使用刚指定的配置项和数据显示图表。
         myChart.setOption(option);
@@ -523,7 +609,7 @@ $(function () {
         });
 
         // 泡泡
-        document.getElementsByClassName("tagcloud4")[0].innerHTML = getProp(dataJobWantedHot.splice(0, 6))
+        document.getElementsByClassName("tagcloud4")[0].innerHTML = getProp(dataJobWantedHot.map(item => [item.value,item.name]).reverse().splice(0, 6))
         tagcloud({
             selector: ".tagcloud4",  //元素选择器
             fontsize: 6,       //基本字体大小, 单位px
@@ -538,6 +624,9 @@ $(function () {
     function echarts_2right() {
         var myChart = echarts.init(document.getElementById('chart2-right'));
         let option = {
+            tooltip: {
+                trigger: 'item'
+            },
             legend: {
                 top: 'bottom',
                 textStyle: {
@@ -552,9 +641,16 @@ $(function () {
             },
             series: [
                 {
-                    name: 'Nightingale Chart',
+                    labelLine: {
+                        show: false
+                    },
+                    label: {
+                        show: false,
+                        position: 'center'
+                    },
+                    name: '行业',
                     type: 'pie',
-                    radius: ["20%", "50%"],
+                    radius: ["30%", "70%"],
                     center: ['45%', '35%'],
                     roseType: 'area',
                     itemStyle: {
@@ -571,10 +667,26 @@ $(function () {
             myChart.resize();
         });
 
+        // 自动切换
+        let currentIdx = 0
+        let preIdx = -1
+        const setV = () => {
+            preIdx != -1 ? (myChart.dispatchAction({ type: 'downplay', seriesIndex: 0, dataIndex: preIdx })) : null;
+            myChart.dispatchAction({ type: 'highlight', seriesIndex: 0, dataIndex: currentIdx })
+            myChart.dispatchAction({ type: 'showTip', seriesIndex: 0, dataIndex: currentIdx })
+            preIdx = currentIdx
+            currentIdx < dataWorkIndustry.length - 1 ? currentIdx++ : (currentIdx = 0)
+        }
+        setV();
+        setInterval(setV, 2000);
     }
     function echarts_1right() {
         var myChart = echarts.init(document.getElementById('chart1-right'));
+
         let option = {
+            tooltip: {
+                trigger: 'item'
+            },
             legend: {
                 top: 'bottom',
                 textStyle: {
@@ -589,10 +701,16 @@ $(function () {
             },
             series: [
                 {
-                    // bottom:"50%",
-                    name: 'Nightingale Chart',
+                    labelLine: {
+                        show: false
+                    },
+                    label: {
+                        show: false,
+                        position: 'center'
+                    },
+                    name: '省份',
                     type: 'pie',
-                    radius: ["20%", "50%"],
+                    radius: ["30%", "70%"],
                     center: ['45%', '35%'],
                     roseType: 'area',
                     itemStyle: {
@@ -609,79 +727,129 @@ $(function () {
             myChart.resize();
         });
 
+        // 自动切换
+        let currentIdx = 0
+        let preIdx = -1
+        const setV = () => {
+            preIdx != -1 ? (myChart.dispatchAction({ type: 'downplay', seriesIndex: 0, dataIndex: preIdx })) : null;
+            myChart.dispatchAction({ type: 'highlight', seriesIndex: 0, dataIndex: currentIdx })
+            myChart.dispatchAction({ type: 'showTip', seriesIndex: 0, dataIndex: currentIdx })
+            preIdx = currentIdx
+            currentIdx < dataWorkIndustry.length - 1 ? currentIdx++ : (currentIdx = 0)
+        }
+        setV();
+        setInterval(setV, 2000);
+        // let option = {
+        //     legend: {
+        //         top: 'bottom',
+        //         textStyle: {
+        //             color: "#fff"
+        //         }
+        //     },
+        //     toolbox: {
+        //         show: true,
+        //         feature: {
+        //             mark: { show: true },
+        //         }
+        //     },
+        //     series: [
+        //         {
+        //             // bottom:"50%",
+        //             name: 'Nightingale Chart',
+        //             type: 'pie',
+        //             radius: ["20%", "50%"],
+        //             center: ['45%', '35%'],
+        //             roseType: 'area',
+        //             itemStyle: {
+        //                 borderRadius: 8
+        //             },
+        //             data: dataProvinces
+        //         }
+        //     ]
+        // }
+
+        // // 使用刚指定的配置项和数据显示图表。
+        // myChart.setOption(option);
+        // window.addEventListener("resize", function () {
+        //     myChart.resize();
+        // });
+
     }
 
     function echarts_1left() {
         var myChart = echarts.init(document.getElementById('chart1-left'));
+        
+        let maxValue = dataArea.reduce((a, b) => a.value > b.value ? a : b, 0).value
+
         let option = {
-            dataset: {
-                source: [
-                    ['amount', 'product'],
-                    [59, '水南街道'],
-                    [78, '西市街道'],
-                    [41, '茅家岭街道'],
-                    [127, '灵溪街道'],
-                    [20, '东市街道'],
-                    [79, '北门街道'],
-                    [91, '沙溪镇'],
-                    [10, '朝阳镇'],
-                    [201, '秦峰乡']
-                ]
-            },
             grid: {
-                containLabel: true,
                 left: "0%",
-                // right: "30px",
-                // bottom: "20%"
+                containLabel: true
             },
-            xAxis: {
-                // name: 'amount',
+            xAxis: [{
+                show: false,
+            }],
+            yAxis: [{
+                axisTick: 'none',
+                axisLine: 'none',
+                offset: '0',
                 axisLabel: {
-                    show: false,
                     textStyle: {
-                        color: '#fff',  //更改坐标轴文字颜色
-                        //    fontSize : 14      //更改坐标轴文字大小
+                        color: '#fff',
+                        fontSize: '14',
                     }
                 },
-                splitLine: {
-                    show: false
+                data: dataArea.map(item => item.name)
+
+            }, {
+                axisTick: 'none',
+                axisLine: 'none',
+                axisLabel: {
+                    textStyle: {
+                        color: '#2f89cf',
+                        fontSize: '14',
+                    }
                 },
-                axisTick: {
-                    show: false
+                data: dataArea.map(item => item.value)
+            }, {
+                nameGap: '50',
+                nameTextStyle: {
+                    color: 'rgba(255,255,255,.6)',
+                    fontSize: '16',
                 },
                 axisLine: {
-                    show: false
-                },
-            },
-            yAxis: {
-                type: 'category',
-                axisLabel: {
-                    interval: 0,
-                    rotate: 20,
-                    show: true,
-                    textStyle: {
-                        color: '#fff',  //更改坐标轴文字颜色
+                    lineStyle: {
+                        color: 'rgba(0,0,0,0)'
                     }
                 },
-            },
-            series: [
-                {
-                    type: 'bar',
-                    encode: {
-                        x: 'amount',
-                        y: 'product'
-                    },
-                    itemStyle: {
-                        normal: {
-                            color: '#2f89cf'
-                        }
-                    },
-                    label: {
-                        show: true,
-                        position: "right"
+                data: [],
+            }],
+            series: [{
+                name: '条',
+                type: 'bar',
+                yAxisIndex: 0,
+                data: dataArea.map(item => item.value / maxValue * 100),
+                itemStyle: {
+                    normal: {
+                        color: '#2f89cf'
                     }
-                }
-            ]
+                },
+                z: 2
+            }, {
+                name: '白框',
+                type: 'bar',
+                yAxisIndex: 1,
+                barGap: '-100%',
+                data: [99.5, 99.5, 99.5, 99.5, 99.5, 99.5, 99.5, 99.5, 99.5, 99.5],
+                barWidth: 15,
+                itemStyle: {
+                    normal: {
+                        color: 'rgba(0,0,0,0)',
+                        barBorderRadius: 15,
+                    }
+                },
+                z: 1
+            }]
         };
 
         // 使用刚指定的配置项和数据显示图表。
@@ -694,73 +862,146 @@ $(function () {
     function echarts_5left() {
         var myChart = echarts.init(document.getElementById('chart5-left'));
 
+        let maxValue = dataJobHot.reduce((a, b) => a.value > b.value ? a : b, 0).value
+
         let option = {
-            dataset: {
-                source: dataJobHot
+            grid: {
+                left: "0%",
+                containLabel: true
             },
-            grid: { containLabel: true },
-            xAxis: {
-                name: 'amount',
+            xAxis: [{
+                show: false,
+            }],
+            yAxis: [{
+                axisTick: 'none',
+                axisLine: 'none',
+                offset: '0',
                 axisLabel: {
-                    show: false,
                     textStyle: {
-                        color: '#fff',  //更改坐标轴文字颜色
-                        //    fontSize : 14      //更改坐标轴文字大小
+                        color: '#fff',
+                        fontSize: '14',
                     }
                 },
-                splitLine: {
-                    show: false
+                data: dataJobHot.map(item => item.name)
+
+            }, {
+                axisTick: 'none',
+                axisLine: 'none',
+                axisLabel: {
+                    textStyle: {
+                        color: '#2f89cf',
+                        fontSize: '14',
+                    }
+                },
+                data: dataJobHot.map(item => item.value)
+            }, {
+                nameGap: '50',
+                nameTextStyle: {
+                    color: 'rgba(255,255,255,.6)',
+                    fontSize: '16',
                 },
                 axisLine: {
-                    show: false
-                },
-                axisTick: {
-                    show: false
-                }
-            },
-            yAxis: {
-                type: 'category',
-                axisLabel: {
-                    show: true,
-                    textStyle: {
-                        color: '#fff',  //更改坐标轴文字颜色
-                        //    fontSize : 14      //更改坐标轴文字大小
+                    lineStyle: {
+                        color: 'rgba(0,0,0,0)'
                     }
                 },
-            },
-            // visualMap: {
-            //   orient: 'horizontal',
-            //   left: 'center',
-            //   min: 10,
-            //   max: 100,
-            //   text: ['High Score', 'Low Score'],
-            //   // Map the score column to color
-            //   dimension: 0,
-            //   inRange: {
-            //     color: ['#65B581', '#FFCE34', '#FD665F']
-            //   }
-            // },
-            series: [
-                {
-                    type: 'bar',
-                    encode: {
-                        // Map the "amount" column to X axis.
-                        x: 'amount',
-                        // Map the "product" column to Y axis
-                        y: 'product'
-                    },
-                    itemStyle: {
-                        normal: {
-                            color: '#2f89cf'
-                        }
-                    },
-                    label: {
-                        show: true,
-                        position: "right"
+                data: [],
+            }],
+            series: [{
+                name: '条',
+                type: 'bar',
+                yAxisIndex: 0,
+                data: dataJobHot.map(item => item.value / maxValue * 100),
+                itemStyle: {
+                    normal: {
+                        color: '#2f89cf'
                     }
-                }
-            ]
+                },
+                z: 2
+            }, {
+                name: '白框',
+                type: 'bar',
+                yAxisIndex: 1,
+                barGap: '-100%',
+                data: [99.5, 99.5, 99.5, 99.5, 99.5, 99.5, 99.5, 99.5, 99.5, 99.5],
+                barWidth: 15,
+                itemStyle: {
+                    normal: {
+                        color: 'rgba(0,0,0,0)',
+                        barBorderRadius: 15,
+                    }
+                },
+                z: 1
+            }]
         };
+
+        // let option = {
+        //     dataset: {
+        //         source: dataJobHot
+        //     },
+        //     grid: { containLabel: true, left: 0 },
+        //     xAxis: {
+        //         name: 'amount',
+        //         axisLabel: {
+        //             show: false,
+        //             textStyle: {
+        //                 color: '#fff',  //更改坐标轴文字颜色
+        //                 //    fontSize : 14      //更改坐标轴文字大小
+        //             }
+        //         },
+        //         splitLine: {
+        //             show: false
+        //         },
+        //         axisLine: {
+        //             show: false
+        //         },
+        //         axisTick: {
+        //             show: false
+        //         }
+        //     },
+        //     yAxis: {
+        //         type: 'category',
+        //         axisLabel: {
+        //             show: true,
+        //             textStyle: {
+        //                 color: '#fff',  //更改坐标轴文字颜色
+        //                 //    fontSize : 14      //更改坐标轴文字大小
+        //             }
+        //         },
+        //     },
+        //     // visualMap: {
+        //     //   orient: 'horizontal',
+        //     //   left: 'center',
+        //     //   min: 10,
+        //     //   max: 100,
+        //     //   text: ['High Score', 'Low Score'],
+        //     //   // Map the score column to color
+        //     //   dimension: 0,
+        //     //   inRange: {
+        //     //     color: ['#65B581', '#FFCE34', '#FD665F']
+        //     //   }
+        //     // },
+        //     series: [
+        //         {
+        //             type: 'bar',
+        //             encode: {
+        //                 // Map the "amount" column to X axis.
+        //                 x: 'amount',
+        //                 // Map the "product" column to Y axis
+        //                 y: 'product'
+        //             },
+        //             itemStyle: {
+        //                 normal: {
+        //                     color: '#2f89cf'
+        //                 }
+        //             },
+        //             label: {
+        //                 show: true,
+        //                 position: "right"
+        //             }
+        //         }
+        //     ]
+        // };
 
         // 使用刚指定的配置项和数据显示图表。
         myChart.setOption(option);
@@ -769,7 +1010,7 @@ $(function () {
         });
 
         // 泡泡
-        document.getElementsByClassName("tagcloud5")[0].innerHTML = getProp(dataJobHot.splice(0, 6))
+        document.getElementsByClassName("tagcloud5")[0].innerHTML = getProp(dataJobHot.map(item => [item.value,item.name]).reverse().splice(0, 6))
         tagcloud({
             selector: ".tagcloud5",  //元素选择器
             fontsize: 6,       //基本字体大小, 单位px
@@ -783,73 +1024,78 @@ $(function () {
     }
     function echarts_2left() {
         var myChart = echarts.init(document.getElementById('chart2-left'));
+
+        let maxValue = dataJobSalary.reduce((a, b) => a.valueA > b.valueA ? a : b, 0).valueA
+
         let option = {
-            // dataset: {
-            //     source: dataJobSalary
-            // },
             grid: {
-                containLabel: true,
                 left: "0%",
-                // right: "30px",
-                // bottom: "20%"
+                containLabel: true
             },
-            xAxis: {
-                // name: 'amount',
+            xAxis: [{
+                show: false,
+            }],
+            yAxis: [{
+                axisTick: 'none',
+                axisLine: 'none',
+                offset: '0',
                 axisLabel: {
-                    show: false,
                     textStyle: {
-                        color: '#fff',  //更改坐标轴文字颜色
+                        color: '#fff',
+                        fontSize: '14',
                     }
                 },
-                splitLine: {
-                    show: false
+                data: dataJobSalary.map(item => item.name)
+
+            }, {
+                axisTick: 'none',
+                axisLine: 'none',
+                axisLabel: {
+                    textStyle: {
+                        color: '#2f89cf',
+                        fontSize: '14',
+                    }
                 },
-                axisTick: {
-                    show: false
+                data: dataJobSalary.map(item => item.values)
+            }, {
+                nameGap: '50',
+                nameTextStyle: {
+                    color: 'rgba(255,255,255,.6)',
+                    fontSize: '16',
                 },
                 axisLine: {
-                    show: false
-                },
-            },
-            yAxis: {
-                type: 'category',
-                axisLabel: {
-                    interval: 0,
-                    rotate: 20,
-                    show: true,
-                    textStyle: {
-                        color: '#fff',  //更改坐标轴文字颜色
-                        //    fontSize : 14      //更改坐标轴文字大小
-                    },
-                    // margin:0
-                },
-            },
-            series: [
-                {
-                    data: dataJobSalary,
-                    type: 'bar',
-                    encode: {
-                        x: 'amount',
-                        y: 'product'
-                    },
-                    left: 0,
-                    itemStyle: {
-                        normal: {
-                            color: '#2f89cf'
-                        }
-                    },
-                    label: {
-                        show: true,
-                        // position: "inner",
-                        // color:"#fff",
-                        position: "right",
-                        formatter: params => {
-                            // return params.data.valueStr || ""
-                            return params.data[2] || ""
-                        }
+                    lineStyle: {
+                        color: 'rgba(0,0,0,0)'
                     }
-                }
-            ]
+                },
+                data: [],
+            }],
+            series: [{
+                name: '条',
+                type: 'bar',
+                yAxisIndex: 0,
+                data: dataJobSalary.map(item => item.valueA / maxValue * 100),
+                itemStyle: {
+                    normal: {
+                        color: '#2f89cf'
+                    }
+                },
+                z: 2
+            }, {
+                name: '白框',
+                type: 'bar',
+                yAxisIndex: 1,
+                barGap: '-100%',
+                data: [99.5, 99.5, 99.5, 99.5, 99.5, 99.5, 99.5, 99.5, 99.5, 99.5],
+                barWidth: 15,
+                itemStyle: {
+                    normal: {
+                        color: 'rgba(0,0,0,0)',
+                        barBorderRadius: 15,
+                    }
+                },
+                z: 1
+            }]
         };
 
         // 使用刚指定的配置项和数据显示图表。
@@ -869,7 +1115,7 @@ $(function () {
             }
         }
 
-        document.getElementById("echart1-oul").innerHTML = dataPlatformJob.map(item => `<li><span>${item.name}</span><p>${item.value}</p></li>`)
+        document.getElementById("echart1-oul").innerHTML = dataPlatformJob.map(item => `<li><span>${item.name}</span><p>${item.value}</p></li>`).join("")
 
         let option = {
             color: ['#9DD060', '#35C96E', '#4DCEF8'],
@@ -1196,7 +1442,6 @@ $(function () {
                     symbolSize: 5,
                     showSymbol: false,
                     lineStyle: {
-
                         normal: {
                             color: '#0184d5',
                             width: 2
@@ -1232,7 +1477,6 @@ $(function () {
                     symbolSize: 5,
                     showSymbol: false,
                     lineStyle: {
-
                         normal: {
                             color: '#00d887',
                             width: 2
