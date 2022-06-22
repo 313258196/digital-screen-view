@@ -69,6 +69,7 @@ $(function () {
             dataPlatformJob = await get("getuserRadar")
             dataPlatformJobVal = dataPlatformJob.map(item => item.value)
 
+
             // 地图数据
             dataMapProvince = await get("getuserMapByProvince")
         } catch (err) {
@@ -310,7 +311,7 @@ $(function () {
                 {
                     name: 'Access From',
                     type: 'pie',
-                    radius: ['60%', '70%'],
+                    radius: ['50%', '60%'],
                     avoidLabelOverlap: false,
                     label: {
                         show: true,
@@ -609,7 +610,7 @@ $(function () {
         });
 
         // 泡泡
-        document.getElementsByClassName("tagcloud4")[0].innerHTML = getProp(dataJobWantedHot.map(item => [item.value,item.name]).reverse().splice(0, 6))
+        document.getElementsByClassName("tagcloud4")[0].innerHTML = getProp(dataJobWantedHot.map(item => [item.value, item.name]).reverse().splice(0, 6))
         tagcloud({
             selector: ".tagcloud4",  //元素选择器
             fontsize: 6,       //基本字体大小, 单位px
@@ -778,7 +779,7 @@ $(function () {
 
     function echarts_1left() {
         var myChart = echarts.init(document.getElementById('chart1-left'));
-        
+
         let maxValue = dataArea.reduce((a, b) => a.value > b.value ? a : b, 0).value
 
         let option = {
@@ -1010,7 +1011,7 @@ $(function () {
         });
 
         // 泡泡
-        document.getElementsByClassName("tagcloud5")[0].innerHTML = getProp(dataJobHot.map(item => [item.value,item.name]).reverse().splice(0, 6))
+        document.getElementsByClassName("tagcloud5")[0].innerHTML = getProp(dataJobHot.map(item => [item.value, item.name]).reverse().splice(0, 6))
         tagcloud({
             selector: ".tagcloud5",  //元素选择器
             fontsize: 6,       //基本字体大小, 单位px
@@ -1115,11 +1116,16 @@ $(function () {
             }
         }
 
-        document.getElementById("echart1-oul").innerHTML = dataPlatformJob.map(item => `<li><span>${item.name}</span><p>${item.value}</p></li>`).join("")
+        document.getElementById("echart1-oul").innerHTML = dataPlatformJob.map(item => `<li><span>${item.name}</span><p>${item.value}分</p></li>`).join("")
 
         let option = {
             color: ['#9DD060', '#35C96E', '#4DCEF8'],
-            tooltip: {},
+            tooltip: {
+                formatter(params) {
+                    let {indicatorFull,name} = params.data
+                    return [name,...indicatorFull.map(item => `${item.name}：${item.value}分`)].join("<br/>")
+                }
+            },
             radar: {
                 center: ['50%', '50%'],
                 radius: ["25%", "70%"],
@@ -1144,7 +1150,6 @@ $(function () {
                         color: 'rgba(255,255,255,0.2)',
                         width: 1,
                         type: 'dotted'
-
                     },
 
                 },
@@ -1159,7 +1164,7 @@ $(function () {
                 name: '',
                 type: 'radar',
                 data: [
-                    { ...styl, value: dataPlatformJobVal, name: "平台求职能力" }
+                    { ...styl, value: dataPlatformJobVal, name: "平台求职能力",indicatorFull: dataPlatformJob }
                 ]
             }]
         };
