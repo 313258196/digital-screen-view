@@ -1,4 +1,5 @@
-﻿const BASE_URL = "http://192.168.2.44:9014/"
+﻿// const BASE_URL = "http://192.168.2.44:9014/"
+const BASE_URL = "http://121.5.53.117:9014"
 const get = (url) => new Promise((resolve, reject) => {
     fetch(`${BASE_URL}${url}`).then(res => res.text()).then(res => resolve(JSON.parse(res))).catch(err => reject(err))
 })
